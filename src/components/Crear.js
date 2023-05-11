@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import { GuardarEnStorage } from '../helpers/GuardarEnStorage';
 
-export const Crear = () => {
+export const Crear = ({setListadoState}) => {
 
-  const titulo = "Añadir pelicula";
+  const tituloComponent = "Añadir pelicula";
   const [peliState, setPeliState] = useState({
     titulo: '',
     descripcion: ''
   });
+
+  const { titulo, descripcion } = peliState;
 
   const conseguirDatorForm = e => {
     e.preventDefault();
@@ -23,14 +26,25 @@ export const Crear = () => {
       descripcion
     };
 
+    //Guardar estado
     setPeliState(peli);
 
-    console.log(peliState);
+    //Actualizar el estado del listado principal
+    setListadoState(elementos => {
+      return [...elementos, peli];
+    });
+
+    //Guardar en el almacenamiento Local
+    GuardarEnStorage("pelis", peli);
   }
 
   return (
     <div className="add">
-      <h3 className="title">{titulo}</h3>
+      <h3 className="title">{tituloComponent}</h3>
+
+      <strong>
+        {(titulo && descripcion) && "Has creado la pelicula: " + titulo}
+      </strong>
 
       <form onSubmit={conseguirDatorForm}>
         <input type="text"
